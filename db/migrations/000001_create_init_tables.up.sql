@@ -1,0 +1,45 @@
+BEGIN;
+
+CREATE TABLE IF NOT EXISTS actors(
+    id SERIAL NOT NULL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    first_name CHARACTER VARYING,
+    last_name CHARACTER VARYING
+);
+
+CREATE TABLE IF NOT EXISTS languages(
+    id SERIAL NOT NULL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    name CHARACTER VARYING
+);
+
+CREATE TABLE IF NOT EXISTS films(
+    id SERIAL NOT NULL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    title CHARACTER VARYING,
+    language_id INTEGER NOT NULL REFERENCES languages(id)
+);
+
+CREATE TABLE IF NOT EXISTS categories(
+    id SERIAL NOT NULL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    name CHARACTER VARYING
+);
+
+CREATE TABLE IF NOT EXISTS film_categories(
+    film_id INTEGER NOT NULL REFERENCES films(id) ON DELETE CASCADE,
+    category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+    PRIMARY KEY (film_id, category_id)
+);
+
+CREATE TABLE IF NOT EXISTS actor_films(
+    actor_id INTEGER NOT NULL REFERENCES actors(id) ON DELETE CASCADE,
+    film_id INTEGER NOT NULL REFERENCES films(id) ON DELETE CASCADE,
+    PRIMARY KEY (actor_id, film_id)
+);
+
+COMMIT;
